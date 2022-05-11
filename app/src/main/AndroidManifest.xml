@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.su.sakuraanime2plugin">
+
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_sakura"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_sakura_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MediaBoxPluginSample"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+
+        <!--必须标记组件工厂实现的完整包-->
+        <meta-data
+            android:name="media_plugin_api_impl"
+            android:value="com.su.sakuraanime2plugin.plugin.PluginFactory" />
+
+        <activity
+            android:name="com.su.sakuraanime2plugin.OtherActivity"
+            android:exported="true"
+            android:label="关于">
+            <intent-filter>
+                <!--方便调试-->
+                <action android:name="media_plugin_debug" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.su.sakuraanime2plugin.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
