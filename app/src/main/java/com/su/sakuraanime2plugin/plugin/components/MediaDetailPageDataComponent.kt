@@ -1,6 +1,7 @@
 package com.su.sakuraanime2plugin.plugin.components
 
 import android.graphics.Color
+import android.util.Log
 import android.view.Gravity
 import com.su.mediabox.pluginapi.components.IMediaDetailPageDataComponent
 import com.su.mediabox.pluginapi.action.ClassifyAction
@@ -10,6 +11,7 @@ import com.su.mediabox.pluginapi.data.*
 import com.su.mediabox.pluginapi.util.TextUtil.urlEncode
 import com.su.mediabox.pluginapi.util.UIUtil.dp
 import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
+import com.su.sakuraanime2plugin.plugin.util.ParseHtmlUtil
 import com.su.sakuraanime2plugin.plugin.util.ParseHtmlUtil.getImageUrl
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -32,6 +34,7 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
 
         val details = mutableListOf<BaseData>()
 
+        //TODO 并发优化
         //番剧头部信息
         val area: Elements = document.getElementsByClass("area")
         for (i in area.indices) {
@@ -138,19 +141,22 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
                                 "info" -> {         //动漫介绍
                                     desc = fireLChildren[k].select("[class=info]").text()
                                 }
-                                "img" -> {         //系列动漫推荐
-                                    //TODO 这里还存在问题
-                                    val series = parseSeries(fireLChildren[k])
-                                    if (series.isNotEmpty()) {
-                                        details.add(
-                                            SimpleTextData("系列作品").apply {
-                                                fontSize = 16F
-                                                fontColor = Color.WHITE
-                                            }
-                                        )
-                                        details.addAll(series)
+                            }
+                        }
+                    }
+                    "sido r" -> {         //系列动漫推荐
+                        Log.d("解析系列作品", "---->")
+                        areaChildren[j].getElementsByClass("pics").first()?.also {
+                            val series = parseSeries(it)
+                            if (series.isNotEmpty()) {
+                                Log.d("其他系列作品", "size=${series.size}")
+                                details.add(
+                                    SimpleTextData("其他系列作品").apply {
+                                        fontSize = 16F
+                                        fontColor = Color.WHITE
                                     }
-                                }
+                                )
+                                details.addAll(series)
                             }
                         }
                     }
@@ -199,25 +205,21 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
     }
 
     private fun parseSeries(element: Element): List<MediaInfo1Data> {
-        val videos = mutableListOf<MediaInfo1Data>()
-        val elements: Elements = element.select("ul").select("li")
-        for (i in elements.indices) {
-            val url = elements[i].select("a").attr("href")
-            val cover = elements[i].select("a").select("img").attr("src")
-            val title = elements[i].select("[class=tname]").select("a").text()
-            var episode = ""
-            if (elements[i].select("p").size > 1) {
-                episode = elements[i].select("p")[1].select("a").text()
-            }
-            videos.add(MediaInfo1Data(
-                title, cover, Const.host + url, episode,
-                nameColor = Color.WHITE,
-                coverHeight = 120.dp
+        val videoInfoItemDataList = mutableListOf<MediaInfo1Data>()
+        val results: Elements = element.select("ul").select("li")
+        for (i in results.indices) {
+            val cover = results[i].select("a").select("img").attr("src").getImageUrl()
+            val title = results[i].select("h2").select("a").text()
+            val url = results[i].select("h2").select("a").attr("href")
+            val item = MediaInfo1Data(
+                title, cover, Const.host + url,
+                nameColor = Color.WHITE, coverHeight = 120.dp
             ).apply {
                 action = DetailAction.obtain(url)
-            })
+            }
+            videoInfoItemDataList.add(item)
         }
-        return videos
+        return videoInfoItemDataList
     }
 
     private fun String.addDouBanSearch(name: String) =
