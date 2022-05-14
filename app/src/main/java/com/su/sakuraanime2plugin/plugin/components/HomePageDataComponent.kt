@@ -11,6 +11,7 @@ import com.su.mediabox.pluginapi.action.DetailAction
 import com.su.mediabox.pluginapi.components.IHomePageDataComponent
 import com.su.mediabox.pluginapi.data.*
 import com.su.mediabox.pluginapi.util.UIUtil.dp
+import com.su.sakuraanime2plugin.plugin.actions.TodoAction
 import com.su.sakuraanime2plugin.plugin.components.Const.host
 import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
 import com.su.sakuraanime2plugin.plugin.util.ParseHtmlUtil.getImageUrl
@@ -104,6 +105,7 @@ class HomePageDataComponent : IHomePageDataComponent {
                 gravity = Gravity.CENTER
             ).apply {
                 spanSize = layoutSpanCount / 4
+                action = TodoAction
                 //TODO
             })
         //最近更新
@@ -116,6 +118,7 @@ class HomePageDataComponent : IHomePageDataComponent {
                 gravity = Gravity.CENTER
             ).apply {
                 spanSize = layoutSpanCount / 4
+                action = TodoAction
                 //TODO
             })
 

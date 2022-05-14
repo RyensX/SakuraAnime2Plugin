@@ -1,6 +1,7 @@
 package com.su.sakuraanime2plugin.plugin.components
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.util.Log
 import android.view.Gravity
 import com.su.mediabox.pluginapi.components.IMediaDetailPageDataComponent
@@ -128,7 +129,8 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
 
                                             details.add(
                                                 SimpleTextData(
-                                                    playName.select("li").text()
+                                                    playName.select("li")
+                                                        .text() + "(${episodes.size}集)"
                                                 ).apply {
                                                     fontSize = 16F
                                                     fontColor = Color.WHITE
@@ -183,10 +185,20 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
             )
             add(TagFlowData(tags))
             add(
-                LongTextData(desc.addDouBanSearch(title)).apply {
+                LongTextData(desc).apply {
                     fontColor = Color.WHITE
                 }
             )
+            add(LongTextData(douBanSearch(title)).apply {
+                fontSize = 14F
+                fontColor = Color.WHITE
+                fontStyle = Typeface.BOLD
+            })
+            add(SimpleTextData("·$upState").apply {
+                fontSize = 14F
+                fontColor = Color.WHITE
+                fontStyle = Typeface.BOLD
+            })
             addAll(details)
         })
     }
@@ -223,6 +235,6 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
         return videoInfoItemDataList
     }
 
-    private fun String.addDouBanSearch(name: String) =
-        this + "\n🎞 豆瓣评分 https://m.douban.com/search/?query=${name.urlEncode()}"
+    private fun douBanSearch(name: String) =
+        "·豆瓣评分：https://m.douban.com/search/?query=${name.urlEncode()}"
 }
