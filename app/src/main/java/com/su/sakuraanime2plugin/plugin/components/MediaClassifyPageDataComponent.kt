@@ -6,7 +6,7 @@ import com.su.mediabox.pluginapi.action.ClassifyAction
 import com.su.mediabox.pluginapi.components.IMediaClassifyPageDataComponent
 import com.su.mediabox.pluginapi.data.BaseData
 import com.su.mediabox.pluginapi.data.ClassifyItemData
-import com.su.mediabox.pluginapi.util.WebUtiIns
+import com.su.mediabox.pluginapi.util.WebUtilIns
 import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
 import com.su.sakuraanime2plugin.plugin.util.ParseHtmlUtil
 import org.jsoup.Jsoup
@@ -18,7 +18,7 @@ class MediaClassifyPageDataComponent : IMediaClassifyPageDataComponent {
         val classifyItemDataList = mutableListOf<ClassifyItemData>()
         //示例：使用WebUtil解析动态生成的分类项
         val document = Jsoup.parse(
-            WebUtiIns.getRenderedHtmlCode(
+            WebUtilIns.getRenderedHtmlCode(
                 Const.host + "/list/",
                 userAgentString = Constant.Request.USER_AGENT_ARRAY[12]
             )

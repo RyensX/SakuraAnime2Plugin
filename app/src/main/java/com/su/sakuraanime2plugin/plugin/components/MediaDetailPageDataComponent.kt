@@ -110,6 +110,7 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
                                         ?: -1F
                                 }
                                 "tabs", "tabs noshow" -> {     //播放列表+header
+                                    //TODO 有些动漫看不到播放列表4
                                     val playNameList =
                                         fireLChildren[k].select("[class=menu0]").select("li")
                                     val playEpisodeList = fireLChildren[k].select("[class=main0]")

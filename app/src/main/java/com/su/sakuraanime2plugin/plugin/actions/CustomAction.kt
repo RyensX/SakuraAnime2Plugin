@@ -12,7 +12,7 @@ import com.su.sakuraanime2plugin.plugin.components.Const
 class CustomAction : Action() {
 
     init {
-        extraData = "打开网页"
+        extraData = "打开数据源"
     }
 
     override fun go(context: Context) {
