@@ -21,9 +21,7 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
 
     private val mouthRegex = Regex("[\\d]")
 
-    override suspend fun getAnimeDetailData(
-        partUrl: String
-    ): Triple<String, String, List<BaseData>> {
+    override suspend fun getMediaDetailData(partUrl: String): Triple<String, String, List<BaseData>> {
         var cover = ""
         var title = ""
         var desc = ""

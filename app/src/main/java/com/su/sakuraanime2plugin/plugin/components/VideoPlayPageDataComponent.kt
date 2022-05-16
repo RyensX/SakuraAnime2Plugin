@@ -16,7 +16,7 @@ import java.io.File
 class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
 
     private val blobDataTmpFile by lazy(LazyThreadSafetyMode.NONE) {
-        File(AppUtil.appContext!!.externalCacheDir, "blob_data_tmp.m3u8").apply {
+        File(AppUtil.appContext.externalCacheDir, "blob_data_tmp.m3u8").apply {
             if (!exists())
                 createNewFile()
         }
