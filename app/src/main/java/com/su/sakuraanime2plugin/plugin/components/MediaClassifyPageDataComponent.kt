@@ -11,6 +11,7 @@ import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
 import com.su.sakuraanime2plugin.plugin.util.ParseHtmlUtil
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
+import java.lang.StringBuilder
 
 class MediaClassifyPageDataComponent : IMediaClassifyPageDataComponent {
 
@@ -35,7 +36,10 @@ class MediaClassifyPageDataComponent : IMediaClassifyPageDataComponent {
     ): List<BaseData> {
         val classifyList = mutableListOf<BaseData>()
         //https://www.yhdmp.net/list/?year=2021&pageindex=1
-        var url = classifyAction.url + "&pageindex=${page - 1}"
+        val urlSb = StringBuilder(classifyAction.url ?: "")
+        urlSb.append(if (urlSb.contains("?")) "&" else "?")
+        urlSb.append("pageindex=${page - 1}")
+        var url = urlSb.toString()
         if (!url.startsWith(Const.host))
             url = Const.host + url
         Log.d("获取分类数据", url)

@@ -25,7 +25,7 @@ class OtherActivity : AppCompatActivity() {
             ).metaData?.getInt("media_plugin_api_version", -1)
         }
             数据源地址： $host
-            开源地址：https://github.com/RyensX/SakuraAnimePlugin
+            开源地址：https://github.com/RyensX/SakuraAnime2Plugin
             
             这是一个解析樱花动漫的MediaBox插件示例
             
