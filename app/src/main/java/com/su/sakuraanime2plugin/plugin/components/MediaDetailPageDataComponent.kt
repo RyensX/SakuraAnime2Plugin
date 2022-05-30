@@ -19,7 +19,7 @@ import org.jsoup.select.Elements
 
 class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
 
-    private val mouthRegex = Regex("[\\d]")
+    private val mouthRegex = Regex("[\\d]+")
 
     override suspend fun getMediaDetailData(partUrl: String): Triple<String, String, List<BaseData>> {
         var cover = ""
@@ -93,7 +93,7 @@ class MediaDetailPageDataComponent : IMediaDetailPageDataComponent {
                                     val tagElements: Elements = span[4].select("a")
                                     for (l in tagElements.indices) {
                                         var name = tagElements[l].text()
-                                        if (name.length == 1 && name.matches(mouthRegex))
+                                        if (name.matches(mouthRegex))
                                             name += "月"
                                         tags.add(TagData(name).apply {
                                             action = ClassifyAction.obtain(
