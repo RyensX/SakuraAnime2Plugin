@@ -122,9 +122,10 @@ class HomePageDataComponent : IHomePageDataComponent {
                 //TODO
             })
 
-
         //3.各类推荐
         val types = doc.getElementsByClass("firs l").first() ?: return null
+        var hasUpdate = false
+        val update = mutableListOf<BaseData>()
         for (em in types.children()) {
             Log.d("元素", em.className())
             when (em.className()) {
@@ -134,6 +135,17 @@ class HomePageDataComponent : IHomePageDataComponent {
                     val typeName = type.text()
                     val typeUrl = type.attr("href")
                     if (!typeName.isNullOrBlank()) {
+
+                        typeName.contains("更新").also {
+                            if (!it && hasUpdate) {
+                                //示例使用水平列表视图组件
+                                data.add(HorizontalListData(update, 120.dp).apply {
+                                    spanSize = layoutSpanCount
+                                })
+                            }
+                            hasUpdate = it
+                        }
+
                         data.add(SimpleTextData(typeName).apply {
                             fontSize = 15F
                             fontStyle = Typeface.BOLD
@@ -161,11 +173,14 @@ class HomePageDataComponent : IHomePageDataComponent {
                             val episode = video.select("[target]").first()?.text()
 
                             if (!name.isNullOrBlank() && !videoUrl.isNullOrBlank() && !coverUrl.isNullOrBlank()) {
-                                data.add(
+                                (if (hasUpdate) update else data).add(
                                     MediaInfo1Data(name, coverUrl, videoUrl, episode ?: "")
                                         .apply {
                                             spanSize = layoutSpanCount / 3
                                             action = DetailAction.obtain(videoUrl)
+                                            if (hasUpdate) {
+                                                paddingRight = 8.dp
+                                            }
                                         })
                                 Log.d("添加视频", "($name) ($videoUrl) ($coverUrl) ($episode)")
                             }
