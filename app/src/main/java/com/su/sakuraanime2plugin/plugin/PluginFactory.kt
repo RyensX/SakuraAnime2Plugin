@@ -19,6 +19,7 @@ class PluginFactory : IPluginFactory() {
         IMediaDetailPageDataComponent::class.java -> MediaDetailPageDataComponent()
         IMediaClassifyPageDataComponent::class.java -> MediaClassifyPageDataComponent()
         IHomePageDataComponent::class.java -> HomePageDataComponent()
+        IMediaUpdateDataComponent::class.java -> MediaUpdateDataComponent
         //自定义页面，需要使用具体类而不是它的基类（接口）
         RankPageDataComponent::class.java -> RankPageDataComponent()
         UpdateTablePageDataComponent::class.java -> UpdateTablePageDataComponent()
