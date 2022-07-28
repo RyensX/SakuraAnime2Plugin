@@ -2,17 +2,27 @@
 
 [**MediaBox插件**](https://github.com/RyensX/MediaBoxPlugin)示例-樱花动漫2
 
+## 提供功能
+* 番剧推荐
+* 番剧分类
+* 番剧搜索
+* 番剧更新表
+* 番剧排行榜
+* 番剧播放(倍速/画面比例/弹幕[TODO]/投屏等)
+* 播放进度记录(包括集)
+* 自动检查番剧更新并推送
+
 ## 如何使用
 
-自动安装
+一键安装(推荐)
 
-1. 下载安装[媒体盒子](https://github.com/RyensX/MediaBox/releases)
+1. 下载安装[媒体盒子](https://github.com/RyensX/MediaBox)
 2. 启动媒体盒子打开插件仓库点击自动下载安装**樱花动漫2**
 3. 启动插件
 
 手动安装
 
-1. 下载安装[媒体盒子](https://github.com/RyensX/MediaBox/releases)
+1. 下载安装[媒体盒子](https://github.com/RyensX/MediaBox)
 2. 下载本项目[插件包](https://github.com/RyensX/SakuraAnime2Plugin/releases)
 3. 选择插件包打开方式为**媒体盒子-插件安装**
 4. 打开**媒体盒子**启动本插件
@@ -23,6 +33,8 @@
 ![排行榜](doc/screenshot/排行榜.jpg) ![更新表](doc/screenshot/更新表.jpg)
 ![搜索](doc/screenshot/搜索.jpg) ![番剧详情](doc/screenshot/番剧详情.jpg)
 ![视频播放](doc/screenshot/视频播放.jpg)
+
+## 如果觉得不错欢迎Star支持开发
 
 ## 免责声明
 
