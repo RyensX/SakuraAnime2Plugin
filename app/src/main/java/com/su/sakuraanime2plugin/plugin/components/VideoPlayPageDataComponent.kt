@@ -1,6 +1,7 @@
 package com.su.sakuraanime2plugin.plugin.components
 
 import android.util.Log
+import com.kuaishou.akdanmaku.data.DanmakuItemData
 import com.su.mediabox.pluginapi.components.IVideoPlayPageDataComponent
 import com.su.mediabox.pluginapi.data.VideoPlayMedia
 import com.su.mediabox.pluginapi.util.AppUtil
@@ -8,7 +9,10 @@ import com.su.mediabox.pluginapi.util.TextUtil.urlDecode
 import com.su.mediabox.pluginapi.util.WebUtilIns
 import com.su.sakuraanime2plugin.plugin.components.Const.host
 import com.su.sakuraanime2plugin.plugin.components.Const.ua
+import com.su.sakuraanime2plugin.plugin.danmaku.OyydsDanmakuParser
 import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
+import com.su.sakuraanime2plugin.plugin.util.Text.trimAll
+import com.su.sakuraanime2plugin.plugin.util.oyydsDanmakuApis
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.io.File
@@ -20,6 +24,54 @@ class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
             if (!exists())
                 createNewFile()
         }
+    }
+
+    private var episodeDanmakuId = ""
+    override suspend fun getDanmakuData(
+        videoName: String,
+        episodeName: String,
+        episodeUrl: String
+    ): List<DanmakuItemData> {
+        val name = videoName.trimAll()
+        var episode = episodeName.trimAll()
+        //剧集对集去除所有额外字符，增大弹幕适应性
+        val episodeIndex = episode.indexOf("集")
+        if (episodeIndex > -1 && episodeIndex != episode.length - 1) {
+            episode = episode.substring(0, episodeIndex + 1)
+        }
+        Log.d("请求Oyyds弹幕", "媒体:$name 剧集:$episode")
+        return oyydsDanmakuApis.getDanmakuData(name, episode).data.let { danmukuData ->
+            val data = mutableListOf<DanmakuItemData>()
+            danmukuData.data.forEach { dataX ->
+                OyydsDanmakuParser.convert(dataX)?.also { data.add(it) }
+            }
+            episodeDanmakuId = danmukuData.episode.id
+            data
+        }
+    }
+
+    override suspend fun putDanmaku(
+        videoName: String,
+        episodeName: String,
+        episodeUrl: String,
+        danmaku: String,
+        time: Long,
+        color: Int,
+        type: Int
+    ): Boolean = try {
+        Log.d("发送弹幕到Oyyds", "内容:$danmaku 剧集id:$episodeDanmakuId")
+        oyydsDanmakuApis.addDanmaku(
+            danmaku,
+            //Oyyds弹幕标准时间是秒
+            (time / 1000F).toString(),
+            episodeDanmakuId,
+            OyydsDanmakuParser.danmakuTypeMap.entries.find { it.value == type }?.key ?: "scroll",
+            String.format("#%02X", color)
+        )
+        true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
     }
 
     override suspend fun getVideoPlayMedia(episodeUrl: String): VideoPlayMedia {

@@ -14,13 +14,13 @@
 
 ## 如何使用
 
-一键安装(推荐)
+* 一键安装(**推荐**)
 
 1. 下载安装[媒体盒子](https://github.com/RyensX/MediaBox)
 2. 启动媒体盒子打开插件仓库点击自动下载安装**樱花动漫2**
 3. 启动插件
 
-手动安装
+* 手动安装
 
 1. 下载安装[媒体盒子](https://github.com/RyensX/MediaBox)
 2. 下载本项目[插件包](https://github.com/RyensX/SakuraAnime2Plugin/releases)
