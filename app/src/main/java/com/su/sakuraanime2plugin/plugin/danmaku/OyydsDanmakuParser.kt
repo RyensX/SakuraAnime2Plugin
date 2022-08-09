@@ -22,8 +22,8 @@ object OyydsDanmakuParser {
                 }
             )
         } catch (e: Exception) {
-            Log.d("丢弃错误弹幕", raw.toString())
-            e.printStackTrace()
+            //Log.d("丢弃错误弹幕", raw.toString())
+            //e.printStackTrace()
             null
         }
     }

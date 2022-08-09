@@ -1,4 +1,5 @@
 package com.su.sakuraanime2plugin.plugin.util
+
 import com.su.mediabox.pluginapi.Constant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -13,7 +14,8 @@ object JsoupUtil {
     fun getDocumentSynchronously(url: String): Document = jsoupRandomHeaderPase(url)
 
     fun jsoupRandomHeaderPase(url: String) = Jsoup.connect(url)
-        .data("User-Agent", Constant.Request.getRandomUserAgent())
+        .header("User-Agent", Constant.Request.getRandomUserAgent())
+        .header("cookie", "rtsm=1;")
         .get()
 
 }
