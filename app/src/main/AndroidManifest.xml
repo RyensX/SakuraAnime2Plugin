@@ -14,7 +14,6 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_sakura_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MediaBoxPluginSample"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
 
@@ -22,21 +21,13 @@
         <meta-data
             android:name="media_plugin_api_impl"
             android:value="com.su.sakuraanime2plugin.plugin.PluginFactory" />
-
-        <activity
-            android:name="com.su.sakuraanime2plugin.OtherActivity"
-            android:exported="true"
-            android:label="关于">
-            <intent-filter>
-                <!--方便调试-->
-                <action android:name="media_plugin_debug" />
-            </intent-filter>
-        </activity>
         <activity
             android:name="com.su.sakuraanime2plugin.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <!--方便调试-->
+                <action android:name="media_plugin_debug" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
