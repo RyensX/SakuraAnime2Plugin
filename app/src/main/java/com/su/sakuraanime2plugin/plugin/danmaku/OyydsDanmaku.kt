@@ -6,6 +6,10 @@ data class OyydsDanmaku(
     val msg: String
 ) {
 
+    companion object {
+        const val OYYDS_DANMAKU_ENABLE = "OYYDS弹幕"
+    }
+
     data class Data(
         val `data`: List<DataX>,
         val episode: Episode,

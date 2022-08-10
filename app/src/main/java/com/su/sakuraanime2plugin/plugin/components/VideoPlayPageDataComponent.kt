@@ -5,10 +5,12 @@ import com.kuaishou.akdanmaku.data.DanmakuItemData
 import com.su.mediabox.pluginapi.components.IVideoPlayPageDataComponent
 import com.su.mediabox.pluginapi.data.VideoPlayMedia
 import com.su.mediabox.pluginapi.util.AppUtil
+import com.su.mediabox.pluginapi.util.PluginPreferenceIns
 import com.su.mediabox.pluginapi.util.TextUtil.urlDecode
 import com.su.mediabox.pluginapi.util.WebUtilIns
 import com.su.sakuraanime2plugin.plugin.components.Const.host
 import com.su.sakuraanime2plugin.plugin.components.Const.ua
+import com.su.sakuraanime2plugin.plugin.danmaku.OyydsDanmaku
 import com.su.sakuraanime2plugin.plugin.danmaku.OyydsDanmakuParser
 import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
 import com.su.sakuraanime2plugin.plugin.util.Text.trimAll
@@ -31,7 +33,10 @@ class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
         videoName: String,
         episodeName: String,
         episodeUrl: String
-    ): List<DanmakuItemData> {
+    ): List<DanmakuItemData>? {
+        val config = PluginPreferenceIns.get(OyydsDanmaku.OYYDS_DANMAKU_ENABLE, true)
+        if (!config)
+            return null
         val name = videoName.trimAll()
         var episode = episodeName.trimAll()
         //剧集对集去除所有额外字符，增大弹幕适应性
