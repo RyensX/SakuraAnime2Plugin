@@ -1,5 +1,6 @@
 package com.su.sakuraanime2plugin.plugin.components
 
+import android.net.Uri
 import android.util.Log
 import com.kuaishou.akdanmaku.data.DanmakuItemData
 import com.su.mediabox.pluginapi.components.IVideoPlayPageDataComponent
@@ -21,12 +22,14 @@ import java.io.File
 
 class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
 
-    private val blobDataTmpFile by lazy(LazyThreadSafetyMode.NONE) {
-        File(AppUtil.appContext.externalCacheDir, "blob_data_tmp.m3u8").apply {
+    private fun blobDataTmpFile(url: String) =
+        File(
+            AppUtil.appContext.externalCacheDir,
+            "${Uri.parse(url).path?.replace("/", "!") ?: "blob_data_tmp"}.m3u8"
+        ).apply {
             if (!exists())
                 createNewFile()
         }
-    }
 
     private var episodeDanmakuId = ""
     override suspend fun getDanmakuData(
@@ -98,7 +101,7 @@ class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
                     //https://m.yhdmp.net/yxsf/player/dpx2/alm3p.html?url=%2fgm3px%2fgt%2d20110046%5frbak%2f%5bSC%2dOL%5d%5b6286f85304f8f2fa%5d%5b01%5d%5b720P%5d%5bCHS%5d%20nvl%2drm&getplay_url=%2F_getplay%3Faid%3D11128%26playindex%3D1%26epindex%3D0%26r%3D0.07102778563665257&vlt_l=0&vlt_r=0
                     iframeUrl.contains("dpx2/alm3p") -> {
                         val blobData = WebUtilIns.interceptBlob(iframeUrl, "^#EXTM(.*)")
-                        blobDataTmpFile.run {
+                        blobDataTmpFile(url).run {
                             writeText(blobData)
                             absolutePath
                         }
