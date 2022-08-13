@@ -10,8 +10,8 @@ android {
         applicationId = "com.su.sakuraanime2plugin"
         minSdk = 21
         targetSdk = 31
-        versionCode = 3
-        versionName = "1.1"
+        versionCode = 4
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
