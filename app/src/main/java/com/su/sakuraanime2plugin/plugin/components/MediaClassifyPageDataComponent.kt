@@ -6,6 +6,8 @@ import com.su.mediabox.pluginapi.action.ClassifyAction
 import com.su.mediabox.pluginapi.components.IMediaClassifyPageDataComponent
 import com.su.mediabox.pluginapi.data.BaseData
 import com.su.mediabox.pluginapi.data.ClassifyItemData
+import com.su.mediabox.pluginapi.util.PluginPreferenceIns
+import com.su.mediabox.pluginapi.util.WebUtil
 import com.su.mediabox.pluginapi.util.WebUtilIns
 import com.su.sakuraanime2plugin.plugin.util.JsoupUtil
 import com.su.sakuraanime2plugin.plugin.util.ParseHtmlUtil
@@ -18,10 +20,15 @@ class MediaClassifyPageDataComponent : IMediaClassifyPageDataComponent {
     override suspend fun getClassifyItemData(): List<ClassifyItemData> {
         val classifyItemDataList = mutableListOf<ClassifyItemData>()
         //示例：使用WebUtil解析动态生成的分类项
+        val cookies = mapOf("cookie" to PluginPreferenceIns.get(JsoupUtil.cfClearanceKey, ""))
         val document = Jsoup.parse(
             WebUtilIns.getRenderedHtmlCode(
-                Const.host + "/list/",
-                userAgentString = Constant.Request.USER_AGENT_ARRAY[12]
+                Const.host + "/list/", loadPolicy = object :
+                    WebUtil.LoadPolicy by WebUtil.DefaultLoadPolicy {
+                    override val headers = cookies
+                    override val userAgentString = Const.ua
+                    override val isClearEnv = false
+                }
             )
         )
         document.getElementById("search-list")?.getElementsByTag("li")?.forEach {

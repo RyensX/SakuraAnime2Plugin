@@ -8,6 +8,7 @@ import com.su.mediabox.pluginapi.data.VideoPlayMedia
 import com.su.mediabox.pluginapi.util.AppUtil
 import com.su.mediabox.pluginapi.util.PluginPreferenceIns
 import com.su.mediabox.pluginapi.util.TextUtil.urlDecode
+import com.su.mediabox.pluginapi.util.WebUtil
 import com.su.mediabox.pluginapi.util.WebUtilIns
 import com.su.sakuraanime2plugin.plugin.components.Const.host
 import com.su.sakuraanime2plugin.plugin.components.Const.ua
@@ -90,12 +91,17 @@ class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
         val url = host + episodeUrl
         val document = JsoupUtil.getDocument(url)
 
+        val cookies = mapOf("cookie" to PluginPreferenceIns.get(JsoupUtil.cfClearanceKey, ""))
         //解析链接
         val videoUrl = withContext(Dispatchers.Main) {
             val iframeUrl = withTimeoutOrNull(10 * 1000) {
                 WebUtilIns.interceptResource(
                     url, "(.*)url=(.*)",
-                    userAgentString = ua
+                    loadPolicy = object : WebUtil.LoadPolicy by WebUtil.DefaultLoadPolicy {
+                        override val headers = cookies
+                        override val userAgentString = ua
+                        override val isClearEnv = false
+                    }
                 )
             } ?: ""
             async {
@@ -104,7 +110,12 @@ class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
                     //1. dpx2/alm3p需要blob拦截（直接拼接请求是加密的）
                     //https://m.yhdmp.net/yxsf/player/dpx2/alm3p.html?url=%2fgm3px%2fgt%2d20110046%5frbak%2f%5bSC%2dOL%5d%5b6286f85304f8f2fa%5d%5b01%5d%5b720P%5d%5bCHS%5d%20nvl%2drm&getplay_url=%2F_getplay%3Faid%3D11128%26playindex%3D1%26epindex%3D0%26r%3D0.07102778563665257&vlt_l=0&vlt_r=0
                     iframeUrl.contains("dpx2/alm3p") -> {
-                        val blobData = WebUtilIns.interceptBlob(iframeUrl, "^#EXTM(.*)")
+                        val blobData = WebUtilIns.interceptBlob(iframeUrl, "^#EXTM(.*)", object :
+                            WebUtil.LoadPolicy by WebUtil.DefaultLoadPolicy {
+                            override val headers = cookies
+                            override val userAgentString = ua
+                            override val isClearEnv = false
+                        })
                         blobDataTmpFile(url).run {
                             writeText(blobData)
                             absolutePath
@@ -124,7 +135,12 @@ class VideoPlayPageDataComponent : IVideoPlayPageDataComponent {
                                 iframeUrl,
                                 "(.*)\\.(gif|mp4)\\?(.*)",
                                 //这里使用电脑的UA会被强制使用H5标准下的blob
-                                userAgentString = ua
+                                loadPolicy = object :
+                                    WebUtil.LoadPolicy by WebUtil.DefaultLoadPolicy {
+                                    override val headers = cookies
+                                    override val userAgentString = ua
+                                    override val isClearEnv = false
+                                }
                             )
                         )
                         iframeDoc.select("#video").select("video").attr("src")
